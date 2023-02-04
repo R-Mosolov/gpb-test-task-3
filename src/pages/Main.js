@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { destructureTimestamp } from '../utils';
+import { DAY_EVENTS_PATH, EVENTS_PATH } from '../constants/navigation';
 
 const getMonthData = (value) => {
   if (value.month() === 8) {
@@ -56,7 +57,7 @@ export const Main = () => {
   
   return (
     <>
-      <Link to="/events/new">
+      <Link to={`${EVENTS_PATH}/new`}>
         <Button
           type="primary"
           size="large"
@@ -67,7 +68,12 @@ export const Main = () => {
       </Link>
       
       <Calendar
-        onSelect={() => navigate('/events')}
+        onSelect={(value) => {
+          const date = value['$d'];
+          const handledDate = date.toISOString().split('T')[0];
+
+          navigate(`${DAY_EVENTS_PATH}/${handledDate}`);
+        }}
         dateCellRender={dateCellRender}
         monthCellRender={monthCellRender}
       />

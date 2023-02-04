@@ -3,22 +3,28 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import {
+  NOT_FOUND_PATH,
+  MAIN_PATH,
+  EVENT_PATH,
+  DAY_EVENT_PATH
+} from './constants/navigation';
 
 const router = createBrowserRouter([
   {
-    path: "*",
+    path: NOT_FOUND_PATH,
     element: <NotFound404 />,
   },
   {
-    path: "/",
+    path: MAIN_PATH,
     element: <Main />,
   },
   {
-    path: "/events",
+    path: DAY_EVENT_PATH,
     element: <Events />,
   },
   {
-    path: "/events/:id",
+    path: EVENT_PATH,
     element: <Event />,
   },
 ]);

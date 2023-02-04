@@ -13,6 +13,10 @@ const slice = createSlice({
         event
       ];
     },
+    deleteEvent(state = initialState, action) {
+      const { event } = action.payload;
+      state.all = state.all.filter(({ id }) => id !== event.id);
+    }
   },
 });
 
@@ -22,5 +26,6 @@ const globalReducer = {
 
 export const {
   createEvent,
+  deleteEvent,
 } = slice.actions;
 export default globalReducer;

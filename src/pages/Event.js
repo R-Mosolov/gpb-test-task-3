@@ -6,6 +6,7 @@ import { createEvent } from '../store/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MINUTES_IN_DAY } from '../constants/global';
 import { v4 as uuidv4 } from 'uuid';
+import { MAIN_PATH } from '../constants/navigation';
 
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -30,10 +31,10 @@ export const Event = (isModalOpen) => {
       description: 'The event has been created successfully!'
     });
     dispatch(createEvent({ event: event }));
-    navigate('/');
+    navigate(MAIN_PATH);
   };
   
-  const handleClose = () => navigate('/');
+  const handleClose = () => navigate(MAIN_PATH);
 
   const handleTitleChange = useCallback((value) => {
     setEvent(event => ({
@@ -62,7 +63,7 @@ export const Event = (isModalOpen) => {
 
   return (
     <Modal
-      title="Creating an Event"
+      title={(id === 'new') ? 'Creating an Event' : 'Editing an Event'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleClose}
