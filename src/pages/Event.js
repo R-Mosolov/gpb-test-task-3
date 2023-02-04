@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Modal, Input, DatePicker, Space, InputNumber, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { notifyUser } from '../utils';
 import { createEvent } from '../store/reducers';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MINUTES_IN_DAY } from '../constants/global';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,9 +14,11 @@ const fullWidth = { width: '124%' };
 export const Event = (isModalOpen) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { all: events } = useSelector(store => store.events);
   const [event, setEvent] = useState({
     id: uuidv4(),
-    title: '',
+    title: events.find(({ id: _id }) => _id === id)?.title || '',
     startTimestamp: '', // Хранит значения в ISO 8601 с нулевым смещением (UTC+0)
     endTimestamp: '', // Хранит значения в ISO 8601 с нулевым смещением (UTC+0)
     reminderTime: 5
@@ -70,6 +72,7 @@ export const Event = (isModalOpen) => {
         <Input
           style={fullWidth}
           placeholder="E.g., make a coffee"
+          value={event?.title || ''}
           onChange={handleTitleChange}
         />
         
