@@ -1,22 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
-  tasks: []
-};
+import { EVENTS } from './constants';
+import { initialState } from './initialState';
 
 const slice = createSlice({
-  name: 'global',
+  name: EVENTS,
   initialState: initialState,
   reducers: {
     createEvent(state = initialState, action) {
-      const { taskTitle } = action.payload;
-      state.tasks = taskTitle;
+      const { event } = action.payload;
+      state.all = [
+        ...state.all,
+        event
+      ];
     },
   },
 });
 
 const globalReducer = {
-  ['global']: slice.reducer,
+  [EVENTS]: slice.reducer,
 };
 
 export const {
