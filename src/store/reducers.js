@@ -8,6 +8,7 @@ const slice = createSlice({
   reducers: {
     createEvent(state = initialState, action) {
       const { event } = action.payload;
+      
       state.all = [
         ...state.all,
         event
@@ -15,7 +16,16 @@ const slice = createSlice({
     },
     deleteEvent(state = initialState, action) {
       const { event } = action.payload;
+      
       state.all = state.all.filter(({ id }) => id !== event.id);
+    },
+    updateEvent(state = initialState, action) {
+      const { event } = action.payload;
+
+      state.all = [
+        ...state.all.filter(({ id }) => id !== event.id),
+        event
+      ];
     }
   },
 });
@@ -27,5 +37,6 @@ const globalReducer = {
 export const {
   createEvent,
   deleteEvent,
+  updateEvent,
 } = slice.actions;
 export default globalReducer;

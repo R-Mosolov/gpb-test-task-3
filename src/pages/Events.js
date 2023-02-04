@@ -6,7 +6,7 @@ import { MAIN_PATH } from '../constants/navigation';
 import { useMemo } from 'react';
 
 const errorHandler = 'At this day, you have not events.';
-const handledDate = (date) => {
+export const handleDate = (date) => {
   const year = new Date(date).getFullYear();
   const month = new Date(date).getMonth() + 1;
   const day = new Date(date).getDate();
@@ -25,7 +25,7 @@ export const Events = () => {
   const handledEvents = useMemo(() => {
 
     return events.filter(
-      ({ startTimestamp }) => handledDate(startTimestamp) === id
+      ({ startTimestamp }) => handleDate(startTimestamp) === id
     );
   }, [events]);
 
@@ -36,7 +36,9 @@ export const Events = () => {
       onCancel={handleClose}
     >
       {(handledEvents.length > 0)
-        ? handledEvents.map(item => <EventItem data={item} />)
+        ? handledEvents.map((item, index) => (
+          <EventItem key={index} data={item} index={index} />
+        ))
         : errorHandler}
     </Modal>
   );

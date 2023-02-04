@@ -2,8 +2,9 @@ import { Badge, Calendar, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { destructureTimestamp } from '../utils';
-import { DAY_EVENTS_PATH, EVENTS_PATH } from '../constants/navigation';
+import { destructureTimestamp } from '../../utils';
+import { DAY_EVENTS_PATH, EVENTS_PATH } from '../../constants/navigation';
+import './Main.scss';
 
 const getMonthData = (value) => {
   if (value.month() === 8) {

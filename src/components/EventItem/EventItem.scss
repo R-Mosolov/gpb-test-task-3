@@ -1,3 +1,23 @@
 .event-item {
   margin-bottom: 15px;
+
+  & .deleting-button {
+    cursor: pointer;
+    font-size: 14px;
+    color: #1677ff;
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      color: rgba(#1677ff, 0.65);
+    }
+  }
+
+  & .main-info {
+    width: 150px !important;
+  }
+
+  & .actions {
+    margin-left: -30px;
+  }
 }

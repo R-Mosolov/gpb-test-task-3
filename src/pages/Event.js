@@ -2,27 +2,32 @@ import React, { useCallback, useState } from 'react';
 import { Modal, Input, DatePicker, Space, InputNumber, Typography } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notifyUser } from '../utils';
-import { createEvent } from '../store/reducers';
+import { createEvent, updateEvent } from '../store/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MINUTES_IN_DAY } from '../constants/global';
 import { v4 as uuidv4 } from 'uuid';
 import { MAIN_PATH } from '../constants/navigation';
+import dayjs from 'dayjs';
+import { handleDate } from './Events';
 
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
-const fullWidth = { width: '124%' };
+const fullWidth = { width: '185%' };
+const dateFormat = "YYYY-MM-DD";
 
 export const Event = (isModalOpen) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const { all: events } = useSelector(store => store.events);
+  const isCreating = id === 'new';
   const [event, setEvent] = useState({
-    id: uuidv4(),
+    id: id || uuidv4(),
     title: events.find(({ id: _id }) => _id === id)?.title || '',
-    startTimestamp: '', // Хранит значения в ISO 8601 с нулевым смещением (UTC+0)
-    endTimestamp: '', // Хранит значения в ISO 8601 с нулевым смещением (UTC+0)
-    reminderTime: 5
+    // Хранят значения в ISO 8601 с нулевым смещением (UTC+0)
+    startTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || '',
+    endTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || '',
+    reminderTime: events.find(({ id: _id }) => _id === id)?.reminderTime
   });
   
   const handleOk = () => {
@@ -30,7 +35,11 @@ export const Event = (isModalOpen) => {
       message: 'Notification',
       description: 'The event has been created successfully!'
     });
-    dispatch(createEvent({ event: event }));
+    
+    isCreating
+      ? dispatch(createEvent({ event: event }))
+      : dispatch(updateEvent({ event: event }));
+    
     navigate(MAIN_PATH);
   };
   
@@ -63,7 +72,7 @@ export const Event = (isModalOpen) => {
 
   return (
     <Modal
-      title={(id === 'new') ? 'Creating an Event' : 'Editing an Event'}
+      title={isCreating ? 'Creating an Event' : 'Editing an Event'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleClose}
@@ -78,7 +87,15 @@ export const Event = (isModalOpen) => {
         />
         
         <Text>Start and End Timestamp</Text>
-        <RangePicker style={fullWidth} showTime onChange={handleTimestamps} />
+        <RangePicker
+          style={fullWidth}
+          defaultValue={[
+            dayjs(handleDate(event.startTimestamp), dateFormat),
+            dayjs(handleDate(event.endTimestamp), dateFormat)
+          ]}
+          format={dateFormat}
+          onChange={handleTimestamps}
+        />
         
         <Text>Reminder Interval, min.</Text>
         <InputNumber
@@ -86,6 +103,7 @@ export const Event = (isModalOpen) => {
           min={1}
           max={MINUTES_IN_DAY}
           defaultValue={5}
+          value={event?.reminderTime || ''}
           onChange={handleReminderTime}
         />
       </Space>
