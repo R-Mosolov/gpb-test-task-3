@@ -22,11 +22,17 @@ export const Event = (isModalOpen) => {
   const { all: events } = useSelector(store => store.events);
   const isCreating = id === 'new';
   const [event, setEvent] = useState({
-    id: id || uuidv4(),
+    id: (() => {
+      if (id === 'new') {
+        return uuidv4();
+      } else {
+        return id;
+      }
+    })(),
     title: events.find(({ id: _id }) => _id === id)?.title || '',
     // Хранят значения в ISO 8601 с нулевым смещением (UTC+0)
-    startTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || '',
-    endTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || '',
+    startTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || new Date(),
+    endTimestamp: events.find(({ id: _id }) => _id === id)?.startTimestamp || new Date(),
     reminderTime: events.find(({ id: _id }) => _id === id)?.reminderTime
   });
   
@@ -90,8 +96,8 @@ export const Event = (isModalOpen) => {
         <RangePicker
           style={fullWidth}
           defaultValue={[
-            dayjs(handleDate(event.startTimestamp), dateFormat),
-            dayjs(handleDate(event.endTimestamp), dateFormat)
+            dayjs(handleDate(event.startTimestamp || new Date()), dateFormat),
+            dayjs(handleDate(event.endTimestamp || new Date()), dateFormat)
           ]}
           format={dateFormat}
           onChange={handleTimestamps}
